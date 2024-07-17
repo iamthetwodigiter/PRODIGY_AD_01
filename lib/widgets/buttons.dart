@@ -26,7 +26,10 @@ class _ButtonsState extends ConsumerState<Buttons> {
 
   void equalPressed() {
     String finaluserinput = ref.read(inputProvider.notifier).state;
-    finaluserinput = finaluserinput.replaceAll('x', '*').replaceAll('−', '-');
+    finaluserinput = finaluserinput
+        .replaceAll('x', '*')
+        .replaceAll('−', '-')
+        .replaceAll("÷", "/");
 
     Parser p = Parser();
     try {
