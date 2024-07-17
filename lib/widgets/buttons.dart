@@ -22,7 +22,6 @@ class Buttons extends ConsumerStatefulWidget {
 
 class _ButtonsState extends ConsumerState<Buttons> {
   late String answer;
-  bool newCalculation = false;
 
   void equalPressed() {
     String finaluserinput = ref.read(inputProvider.notifier).state;
@@ -32,21 +31,14 @@ class _ButtonsState extends ConsumerState<Buttons> {
         .replaceAll("÷", "/");
 
     Parser p = Parser();
-    try {
-      Expression exp = p.parse(finaluserinput);
-      ContextModel cm = ContextModel();
-      double eval = exp.evaluate(EvaluationType.REAL, cm);
-      setState(() {
-        answer = eval.toString();
-      });
-    } catch (e) {
-      setState(() {
-        answer = 'Invalid Syntax';
-      });
-      setState(() {
-        newCalculation = true;
-      });
-    }
+
+    Expression exp = p.parse(finaluserinput);
+    ContextModel cm = ContextModel();
+    double eval = exp.evaluate(EvaluationType.REAL, cm);
+    setState(() {
+      // answer = eval.toString();
+      ref.read(inputProvider.notifier).state = eval.toString();
+    });
   }
 
   @override
@@ -56,12 +48,6 @@ class _ButtonsState extends ConsumerState<Buttons> {
 
     return IconButton(
       onPressed: () {
-        if (newCalculation) {
-          ref.read(inputProvider.notifier).state = '';
-          setState(() {
-            newCalculation = false;
-          });
-        }
 
         if (widget.text == 'C') {
           ref.read(inputProvider.notifier).state = '';
@@ -69,10 +55,8 @@ class _ButtonsState extends ConsumerState<Buttons> {
           if (widget.text != "...") {
             if (widget.text == "=") {
               equalPressed();
-              ref.read(inputProvider.notifier).state = answer;
-              setState(() {
-                newCalculation = true;
-              });
+              
+              // ref.read(inputProvider.notifier).state = '';
             } else {
               ref.read(inputProvider.notifier).state += widget.text;
             }
